@@ -15,7 +15,7 @@ body {
 input[type="password"],
 input[type="email"] {
   border: 1px solid $primaryLight;
-  line-height: 2.5rem;
+  line-height: 3.5rem;
   border-radius: .25rem;
   padding-left: .5rem;
   padding-right: 2.5rem;
@@ -49,7 +49,6 @@ button {
     flex-direction: column;
     align-items: center;
     background-color: $primary;
-    border-top: 2.5rem solid $primaryDark;
 
     img {
       max-width: 3rem;
@@ -123,9 +122,11 @@ button {
       
       .spinner {
         margin-top: 1.5rem;
+        display: none;
       }
 
       .error {
+        display: none;
         margin-top: 1.5rem;
         color: $primaryLight;
       }
