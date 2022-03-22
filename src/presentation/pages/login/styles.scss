@@ -1,0 +1,139 @@
+@import "../../styles/colors.scss";
+
+* {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $background;
+}
+
+input[type="password"],
+input[type="email"] {
+  border: 1px solid $primaryLight;
+  line-height: 2.5rem;
+  border-radius: .25rem;
+  padding-left: .5rem;
+  padding-right: 2.5rem;
+
+  &:focus {
+    outline-color: $primaryLight;
+  }
+}
+
+button {
+  background-color: $primary;
+  color: $white;
+  border-radius: .5rem;
+  font-size: 1rem;
+  border: none;
+  padding: .75rem 4rem;
+
+  &:hover {
+    opacity: .9;
+  }
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $primary;
+    border-top: 2.5rem solid $primaryDark;
+
+    img {
+      max-width: 3rem;
+      margin-top: 2.5rem;
+    }
+
+    h1 {
+      color: $white;
+      margin: 1rem 0 2.5rem;
+    }
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    background-color: $white;
+    padding: 3rem;
+    border-radius: .5rem;
+    align-self: center;
+    box-shadow: 0 2px 3px -1px rgba(0, 0, 0, .25);
+
+    h2 {
+      color: $primaryDark;
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .inputWrap {
+      display: flex;
+      align-items: center;
+      position: relative;
+
+      & + .inputWrap {
+        margin-top: 1rem;
+      }
+
+      input {
+        width: 100%;
+      }
+
+      .inputStatus {
+        position: absolute;
+        right: .5rem;
+        font-size: .75rem;
+      }
+    }
+
+    .submit {
+      margin-top: 2rem;
+    }
+
+    .link {
+      text-align: center;
+      color: $primary;
+      margin-top: 16px;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .errorWrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      
+      .spinner {
+        margin-top: 1.5rem;
+      }
+
+      .error {
+        margin-top: 1.5rem;
+        color: $primaryLight;
+      }
+    }
+  }
+  
+  .footer {
+    background-color: $primary;
+    height: 3rem;
+  }
+}
