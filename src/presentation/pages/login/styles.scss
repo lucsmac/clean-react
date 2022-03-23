@@ -63,26 +63,6 @@ button {
       margin-bottom: 1.5rem;
     }
 
-    .inputWrap {
-      display: flex;
-      align-items: center;
-      position: relative;
-
-      & + .inputWrap {
-        margin-top: 1rem;
-      }
-
-      input {
-        width: 100%;
-      }
-
-      .inputStatus {
-        position: absolute;
-        right: .5rem;
-        font-size: .75rem;
-      }
-    }
-
     .submit {
       margin-top: 2rem;
     }
