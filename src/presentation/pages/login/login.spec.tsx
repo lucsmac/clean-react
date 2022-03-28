@@ -11,6 +11,8 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy()
+  const errorMessage = faker.random.words()
+  validationSpy.errorMessage = errorMessage
   const sut = render(<Login validation={validationSpy} />)
   return {
     sut,
@@ -25,19 +27,23 @@ describe('Login Component', () => {
     test('Should not render form status', () => {
       const { sut } = makeSut()
       const errorWrap = sut.getByTestId('error-wrap')
+
       expect(errorWrap.childElementCount).toBe(0)
     })
+
     test('Should render submit button disabled', () => {
       const { sut } = makeSut()
       const submitButton = sut.getByTestId('submit') as HTMLButtonElement
+
       expect(submitButton.disabled).toBe(true)
     })
+
     test('Should render input fields as required', () => {
-      const { sut } = makeSut()
+      const { sut, validationSpy } = makeSut()
       const emailStatus = sut.getByTestId('email-status')
       const passwordStatus = sut.getByTestId('password-status')
 
-      expect(emailStatus.title).toBe('Campo obrigatório')
+      expect(emailStatus.title).toBe(validationSpy.errorMessage)
       expect(emailStatus.textContent).toBe('🔴')
       expect(passwordStatus.title).toBe('Campo obrigatório')
       expect(passwordStatus.textContent).toBe('🔴')
@@ -50,6 +56,7 @@ describe('Login Component', () => {
       const emailInput = sut.getByTestId('email')
       const email = faker.internet.email()
       fireEvent.input(emailInput, { target: { value: email } })
+
       expect(validationSpy.fieldName).toBe('email')
       expect(validationSpy.fieldValue).toBe(email)
     })
@@ -59,8 +66,19 @@ describe('Login Component', () => {
       const passwordInput = sut.getByTestId('password')
       const password = faker.internet.password()
       fireEvent.input(passwordInput, { target: { value: password } })
+
       expect(validationSpy.fieldName).toBe('password')
       expect(validationSpy.fieldValue).toBe(password)
     })
+  })
+
+  test('Should show email error if Validation fails', () => {
+    const { sut, validationSpy } = makeSut()
+    const emailStatus = sut.getByTestId('email-status')
+    const emailInput = sut.getByTestId('email')
+    fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
+
+    expect(emailStatus.title).toBe(validationSpy.errorMessage)
+    expect(emailStatus.textContent).toBe('🔴')
   })
 })
