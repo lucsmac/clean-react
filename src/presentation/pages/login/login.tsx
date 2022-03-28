@@ -35,6 +35,11 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
 
   const hasError = (): boolean => !!errorState.email || !!errorState.password
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault()
+    setState(oldState => ({ ...oldState, isLoading: true }))
+  }
+
   useEffect(() => {
     setErrorState((prevState) => ({
       ...prevState,
@@ -53,7 +58,7 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
     <div className={Styles.login}>
       <Header />
       <Context.Provider value={{ state, setState, errorState }}>
-        <form className={Styles.form}>
+        <form className={Styles.form} onSubmit={handleSubmit}>
           <h2>Login</h2>
           <Input type="email" name="email" placeholder='Digite seu e-mail' />
           <Input type="password" name="password" placeholder='Digite sua senhal' />
