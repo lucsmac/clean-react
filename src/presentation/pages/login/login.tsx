@@ -33,6 +33,8 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
     main: ''
   })
 
+  const hasError = (): boolean => !!errorState.email || !!errorState.password
+
   useEffect(() => {
     setErrorState((prevState) => ({
       ...prevState,
@@ -55,7 +57,7 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
           <h2>Login</h2>
           <Input type="email" name="email" placeholder='Digite seu e-mail' />
           <Input type="password" name="password" placeholder='Digite sua senhal' />
-          <button data-testid="submit" disabled type="submit" className={Styles.submit}>Entrar</button>
+          <button data-testid="submit" disabled={hasError()} type="submit" className={Styles.submit}>Entrar</button>
           <span className={Styles.link}>Criar conta</span>
           <FormStatus />
         </form>
