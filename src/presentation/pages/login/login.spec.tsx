@@ -45,7 +45,7 @@ describe('Login Component', () => {
 
       expect(emailStatus.title).toBe(validationSpy.errorMessage)
       expect(emailStatus.textContent).toBe('🔴')
-      expect(passwordStatus.title).toBe('Campo obrigatório')
+      expect(passwordStatus.title).toBe(validationSpy.errorMessage)
       expect(passwordStatus.textContent).toBe('🔴')
     })
   })
@@ -72,13 +72,25 @@ describe('Login Component', () => {
     })
   })
 
-  test('Should show email error if Validation fails', () => {
-    const { sut, validationSpy } = makeSut()
-    const emailStatus = sut.getByTestId('email-status')
-    const emailInput = sut.getByTestId('email')
-    fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
+  describe('Should show error if Validation fails', () => {
+    test('email error', () => {
+      const { sut, validationSpy } = makeSut()
+      const emailStatus = sut.getByTestId('email-status')
+      const emailInput = sut.getByTestId('email')
+      fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
 
-    expect(emailStatus.title).toBe(validationSpy.errorMessage)
-    expect(emailStatus.textContent).toBe('🔴')
+      expect(emailStatus.title).toBe(validationSpy.errorMessage)
+      expect(emailStatus.textContent).toBe('🔴')
+    })
+
+    test('password error', () => {
+      const { sut, validationSpy } = makeSut()
+      const passwordStatus = sut.getByTestId('password-status')
+      const passwordInput = sut.getByTestId('password')
+      fireEvent.input(passwordInput, { target: { value: faker.internet.password() } })
+
+      expect(passwordStatus.title).toBe(validationSpy.errorMessage)
+      expect(passwordStatus.textContent).toBe('🔴')
+    })
   })
 })
