@@ -72,7 +72,7 @@ describe('Login Component', () => {
     })
   })
 
-  describe('Should show error if Validation fails', () => {
+  describe('Should show error state if Validation fails', () => {
     test('email error', () => {
       const { sut, validationSpy } = makeSut()
       const emailStatus = sut.getByTestId('email-status')
@@ -113,6 +113,18 @@ describe('Login Component', () => {
       fireEvent.input(passwordInput, { target: { value: faker.internet.password() } })
 
       expect(passwordStatus.textContent).toBe('✔')
+    })
+
+    test('Should enable submit button if form is valid', () => {
+      const { sut, validationSpy } = makeSut()
+      validationSpy.errorMessage = null
+      const emailInput = sut.getByTestId('email')
+      fireEvent.input(emailInput, { target: { value: faker.internet.email() } })
+      const passwordInput = sut.getByTestId('password')
+      fireEvent.input(passwordInput, { target: { value: faker.internet.password() } })
+      const submitButton = sut.getByTestId('submit') as HTMLButtonElement
+
+      expect(submitButton.disabled).toBe(false)
     })
   })
 })
