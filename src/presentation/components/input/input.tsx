@@ -9,7 +9,7 @@ export const Input: React.FC<Props> = (props: Props) => {
   const error = errorState[props.name]
 
   const getStatus = (): string => {
-    return '🔴'
+    return error ? '🔴' : '✔'
   }
 
   const getTtitle = (): string => {
