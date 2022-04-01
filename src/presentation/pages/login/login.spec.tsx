@@ -1,8 +1,9 @@
 import React from 'react'
-import { cleanup, fireEvent, render, RenderResult } from '@testing-library/react'
+import { cleanup, fireEvent, render, RenderResult, waitFor } from '@testing-library/react'
 import faker from 'faker'
 import Login from './login'
 import { ValidationSpy, AuthenticationSpy } from '@/presentation/test'
+import { InvalidCredentialsError } from '@/domain/errors'
 
 type SutTypes = {
   sut: RenderResult
@@ -115,50 +116,62 @@ describe('Login Component', () => {
       populatePasswordField(sut)
       simulateFieldStatus(sut, 'password')
     })
+  })
 
-    test('Should enable submit button if form is valid', () => {
-      const { sut } = makeSut()
-      populateEmailField(sut)
-      populatePasswordField(sut)
-      const submitButton = sut.getByTestId('submit') as HTMLButtonElement
+  test('Should enable submit button if form is valid', () => {
+    const { sut } = makeSut()
+    populateEmailField(sut)
+    populatePasswordField(sut)
+    const submitButton = sut.getByTestId('submit') as HTMLButtonElement
 
-      expect(submitButton.disabled).toBe(false)
+    expect(submitButton.disabled).toBe(false)
+  })
+
+  test('Should show spinner on submit', () => {
+    const { sut } = makeSut()
+    simulateValidSubmit(sut)
+    const spinner = sut.getByTestId('spinner')
+
+    expect(spinner).toBeTruthy()
+  })
+
+  test('Should call Authentication with correct values', () => {
+    const { sut, authenticationSpy } = makeSut()
+    const email = faker.internet.email()
+    const password = faker.internet.password()
+    simulateValidSubmit(sut, email, password)
+
+    expect(authenticationSpy.params).toEqual({
+      email,
+      password
     })
+  })
 
-    test('Should show spinner on submit', () => {
-      const { sut } = makeSut()
-      simulateValidSubmit(sut)
-      const spinner = sut.getByTestId('spinner')
+  test('Should call Authentication only once', () => {
+    const { sut, authenticationSpy } = makeSut()
+    simulateValidSubmit(sut)
+    simulateValidSubmit(sut)
 
-      expect(spinner).toBeTruthy()
-    })
+    expect(authenticationSpy.callsCount).toBe(1)
+  })
 
-    test('Should call Authentication with correct values', () => {
-      const { sut, authenticationSpy } = makeSut()
-      const email = faker.internet.email()
-      const password = faker.internet.password()
-      simulateValidSubmit(sut, email, password)
+  test('Should not call Authentication if form is invalid', () => {
+    const { sut, authenticationSpy } = makeSut({ validationError: faker.random.words() })
+    populateEmailField(sut)
+    fireEvent.submit(sut.getByTestId('form'))
 
-      expect(authenticationSpy.params).toEqual({
-        email,
-        password
-      })
-    })
+    expect(authenticationSpy.callsCount).toBe(0)
+  })
 
-    test('Should call Authentication only once', () => {
-      const { sut, authenticationSpy } = makeSut()
-      simulateValidSubmit(sut)
-      simulateValidSubmit(sut)
-
-      expect(authenticationSpy.callsCount).toBe(1)
-    })
-
-    test('Should not call Authentication if form is invalid', () => {
-      const { sut, authenticationSpy } = makeSut({ validationError: faker.random.words() })
-      populateEmailField(sut)
-      fireEvent.submit(sut.getByTestId('form'))
-
-      expect(authenticationSpy.callsCount).toBe(0)
-    })
+  test('Should not call Authentication if form is invalid', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    const error = new InvalidCredentialsError()
+    jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(Promise.reject(error))
+    simulateValidSubmit(sut)
+    const errorWrap = sut.getByTestId('error-wrap')
+    await waitFor(() => errorWrap)
+    const mainError = sut.getByTestId('main-error')
+    expect(mainError.textContent).toBe(error.message)
+    expect(errorWrap.childElementCount).toBe(1)
   })
 })
