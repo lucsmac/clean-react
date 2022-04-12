@@ -5,6 +5,7 @@ import 'jest-localstorage-mock'
 import Login from './login'
 import { ValidationSpy, AuthenticationSpy } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
+import { BrowserRouter } from 'react-router-dom'
 
 type SutTypes = {
   sut: RenderResult
@@ -20,7 +21,11 @@ const makeSut = (params?: SutParams): SutTypes => {
   const validationSpy = new ValidationSpy()
   const authenticationSpy = new AuthenticationSpy()
   validationSpy.errorMessage = params?.validationError
-  const sut = render(<Login validation={validationSpy} authentication={authenticationSpy} />)
+  const sut = render(
+    <BrowserRouter>
+      <Login validation={validationSpy} authentication={authenticationSpy} />
+    </BrowserRouter>
+  )
   return {
     sut,
     validationSpy,
@@ -185,5 +190,12 @@ describe('Login Component', () => {
     simulateValidSubmit(sut)
     await waitFor(() => sut.getByTestId('form'))
     expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
+  })
+
+  test('Should add accessToken to localstorage on', async () => {
+    const { sut } = makeSut()
+    const signup = sut.getByTestId('signup')
+    fireEvent.click(signup)
+    expect(window.location.pathname).toBe('/signup')
   })
 })
