@@ -57,9 +57,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
       navigate('/')
     } catch (error) {
       setState(oldState => ({ ...oldState, isLoading: false }))
-      console.log(error)
       setErrorState(oldState => ({ ...oldState, main: error.message }))
-      console.log(errorState)
     }
   }
 

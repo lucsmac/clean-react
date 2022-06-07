@@ -1,5 +1,5 @@
-import { ValidationBuilder } from '@/validation/builder/validation-builder';
-import { ValidationComposite } from '@/validation/validators';
+import { ValidationBuilder } from '@/validation/builder/validation-builder'
+import { ValidationComposite } from '@/validation/validators'
 import { makeLoginValidation } from './login-validation-factory'
 
 describe('LoginValidationFactory', () => {
@@ -9,5 +9,5 @@ describe('LoginValidationFactory', () => {
       ...ValidationBuilder.field('email').required().email().build(),
       ...ValidationBuilder.field('password').required().min(5).build()
     ]))
-  });
-});
+  })
+})
