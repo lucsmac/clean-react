@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useEffect, useState } from 'react'
 import Styles from './styles.scss'
 import { LoginHeader as Header, Footer, Input, FormStatus } from '@/presentation/components'
@@ -56,7 +57,9 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
       navigate('/')
     } catch (error) {
       setState(oldState => ({ ...oldState, isLoading: false }))
+      console.log(error)
       setErrorState(oldState => ({ ...oldState, main: error.message }))
+      console.log(errorState)
     }
   }
 
