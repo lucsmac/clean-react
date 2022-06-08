@@ -1,4 +1,3 @@
-import { HttpPostParams } from '@/data/protocols/http'
 import { AxiosHttpClient } from './axios-http-client'
 import { mockPostRequest } from '@/data/test'
 import { mockAxios, mockHttpResponse } from '@/infra/test'
