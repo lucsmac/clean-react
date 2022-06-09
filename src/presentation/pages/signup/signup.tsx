@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Styles from './styles.scss'
 import { LoginHeader as Header, Footer, Input, FormStatus } from '@/presentation/components'
 import Context from '@/presentation/contexts/form/form-context'
+import { Validation } from '@/presentation/protocols/validation'
 
 type StateProps = {
   isLoading: boolean
+  name: string
 }
 
 type ErrorStateProps = {
@@ -16,12 +18,17 @@ type ErrorStateProps = {
   main: string
 }
 
-const SignUp: React.FC = () => {
-  const [state] = useState<StateProps>({
+type Props = {
+  validation?: Validation
+}
+
+const SignUp: React.FC<Props> = ({ validation }: Props) => {
+  const [state, setState] = useState<StateProps>({
     isLoading: false,
+    name: '',
   })
 
-  const [errorState] = useState<ErrorStateProps>({
+  const [errorState, setErrorState] = useState<ErrorStateProps>({
     name: 'Campo obrigatório',
     email: 'Campo obrigatório',
     password: 'Campo obrigatório',
@@ -29,10 +36,17 @@ const SignUp: React.FC = () => {
     main: ''
   })
 
+  useEffect(() => {
+    setErrorState((prevState) => ({
+      ...prevState,
+      name: validation.validate('name', state.name)
+    }))
+  }, [state.name])
+
   return (
     <div className={Styles.signup}>
       <Header />
-      <Context.Provider value={{ state, errorState }}>
+      <Context.Provider value={{ state, setState, errorState, setErrorState }}>
         <form className={Styles.form}>
           <h2>Criar conta</h2>
           <Input type="text" name="name" placeholder='Digite seu nome' />
