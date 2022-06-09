@@ -5,6 +5,7 @@ import { Login } from '@/presentation/pages'
 import { ValidationSpy, AuthenticationSpy, SaveAccessTokenMock } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
 import { BrowserRouter } from 'react-router-dom'
+import { testButtonIsDisabled, testChildChildCount, testStatusForField } from '@/presentation/test/form-helper'
 
 type SutTypes = {
   sut: RenderResult
@@ -58,25 +59,9 @@ const populatePasswordField = (sut: RenderResult, password = faker.internet.pass
   fireEvent.input(passwordInput, { target: { value: password } })
 }
 
-const testStatusForField = (sut: RenderResult, fieldName: string, validationError?: string): void => {
-  const fieldStatus = sut.getByTestId(`${fieldName}-status`)
-  expect(fieldStatus.title).toBe(validationError || '')
-  expect(fieldStatus.textContent).toBe(validationError ? '🔴' : '✔')
-}
-
-const testErrorWrapChildCount = (sut: RenderResult, count: number): void => {
-  const errorWrap = sut.getByTestId('error-wrap')
-  expect(errorWrap.childElementCount).toBe(count)
-}
-
 const testElementText = (sut: RenderResult, fieldName: string, text: string): void => {
   const element = sut.getByTestId(fieldName)
   expect(element.textContent).toBe(text)
-}
-
-const testButtonIsDisabled = (sut: RenderResult, fieldName: string, isDisabled = true): void => {
-  const button = sut.getByTestId(fieldName) as HTMLButtonElement
-  expect(button.disabled).toBe(isDisabled)
 }
 
 describe('Login Component', () => {
@@ -85,7 +70,7 @@ describe('Login Component', () => {
 
     test('Should not render form status', () => {
       const { sut } = makeSut()
-      testErrorWrapChildCount(sut, 0)
+      testChildChildCount(sut, 'error-wrap', 0)
     })
 
     test('Should render input fields as required', () => {
@@ -191,7 +176,7 @@ describe('Login Component', () => {
     jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(Promise.reject(error))
     await simulateValidSubmit(sut)
     testElementText(sut, 'main-error', error.message)
-    testErrorWrapChildCount(sut, 1)
+    testChildChildCount(sut, 'error-wrap', 1)
   })
 
   test('Should call SaveAccessToken on success', async () => {
@@ -206,7 +191,7 @@ describe('Login Component', () => {
     jest.spyOn(saveAccessTokenMock, 'save').mockReturnValueOnce(Promise.reject(error))
     await simulateValidSubmit(sut)
     testElementText(sut, 'main-error', error.message)
-    testErrorWrapChildCount(sut, 1)
+    testChildChildCount(sut, 'error-wrap', 1)
   })
 
   test('Should redirect to signup on success', () => {
