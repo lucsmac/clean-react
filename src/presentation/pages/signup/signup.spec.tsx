@@ -1,7 +1,12 @@
 import React from 'react'
 import Signup from './signup'
 import { RenderResult, render, cleanup } from '@testing-library/react'
-import { populateField, testButtonIsDisabled, testChildChildCount, testStatusForField } from '@/presentation/test/form-helper'
+import {
+  populateField,
+  testButtonIsDisabled,
+  testChildChildCount,
+  testStatusForField
+} from '@/presentation/test/form-helper'
 import { ValidationSpy } from '@/presentation/test'
 import faker from 'faker'
 

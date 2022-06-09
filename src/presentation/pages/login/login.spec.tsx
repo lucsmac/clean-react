@@ -5,7 +5,12 @@ import { Login } from '@/presentation/pages'
 import { ValidationSpy, AuthenticationSpy, SaveAccessTokenMock } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
 import { BrowserRouter } from 'react-router-dom'
-import { testButtonIsDisabled, testChildChildCount, testStatusForField } from '@/presentation/test/form-helper'
+import {
+  populateField,
+  testButtonIsDisabled,
+  testChildChildCount,
+  testStatusForField
+} from '@/presentation/test/form-helper'
 
 type SutTypes = {
   sut: RenderResult
@@ -20,9 +25,9 @@ type SutParams = {
 
 const makeSut = (params?: SutParams): SutTypes => {
   const validationSpy = new ValidationSpy()
+  validationSpy.errorMessage = params?.validationError
   const authenticationSpy = new AuthenticationSpy()
   const saveAccessTokenMock = new SaveAccessTokenMock()
-  validationSpy.errorMessage = params?.validationError
   const sut = render(
     <BrowserRouter>
       <Login
@@ -41,22 +46,12 @@ const makeSut = (params?: SutParams): SutTypes => {
 }
 
 const simulateValidSubmit = async (sut: RenderResult, email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
-  populateEmailField(sut, email)
-  populatePasswordField(sut, password)
+  populateField(sut, 'email', email)
+  populateField(sut, 'password', password)
 
   const form = sut.getByTestId('form') as HTMLButtonElement
   fireEvent.submit(form)
   await waitFor(() => form)
-}
-
-const populateEmailField = (sut: RenderResult, email = faker.internet.email()): void => {
-  const emailInput = sut.getByTestId('email')
-  fireEvent.input(emailInput, { target: { value: email } })
-}
-
-const populatePasswordField = (sut: RenderResult, password = faker.internet.password()): void => {
-  const passwordInput = sut.getByTestId('password')
-  fireEvent.input(passwordInput, { target: { value: password } })
 }
 
 const testElementText = (sut: RenderResult, fieldName: string, text: string): void => {
@@ -85,7 +80,7 @@ describe('Login Component', () => {
     test('With correct email', () => {
       const { sut, validationSpy } = makeSut()
       const email = faker.internet.email()
-      populateEmailField(sut, email)
+      populateField(sut, 'email', email)
 
       expect(validationSpy.fieldName).toBe('email')
       expect(validationSpy.fieldValue).toBe(email)
@@ -94,7 +89,7 @@ describe('Login Component', () => {
     test('With correct password', () => {
       const { sut, validationSpy } = makeSut()
       const password = faker.internet.password()
-      populatePasswordField(sut, password)
+      populateField(sut, 'password', password)
 
       expect(validationSpy.fieldName).toBe('password')
       expect(validationSpy.fieldValue).toBe(password)
@@ -104,13 +99,13 @@ describe('Login Component', () => {
   describe('Should show error state if Validation fails', () => {
     test('email error', () => {
       const { sut, validationSpy } = makeSut({ validationError: faker.random.words() })
-      populateEmailField(sut)
+      populateField(sut, 'email')
       testStatusForField(sut, 'email', validationSpy.errorMessage)
     })
 
     test('password error', () => {
       const { sut, validationSpy } = makeSut({ validationError: faker.random.words() })
-      populatePasswordField(sut)
+      populateField(sut, 'password')
       testStatusForField(sut, 'password', validationSpy.errorMessage)
     })
   })
@@ -118,21 +113,21 @@ describe('Login Component', () => {
   describe('Should show valid state if Validation succeeds', () => {
     test('email succeeds', () => {
       const { sut } = makeSut()
-      populateEmailField(sut)
+      populateField(sut, 'email')
       testStatusForField(sut, 'email')
     })
 
     test('password succeeds', () => {
       const { sut } = makeSut()
-      populatePasswordField(sut)
+      populateField(sut, 'password')
       testStatusForField(sut, 'password')
     })
   })
 
   test('Should enable submit button if form is valid', () => {
     const { sut } = makeSut()
-    populateEmailField(sut)
-    populatePasswordField(sut)
+    populateField(sut, 'email')
+    populateField(sut, 'password')
     testButtonIsDisabled(sut, 'submit', false)
   })
 
