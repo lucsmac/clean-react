@@ -1,6 +1,6 @@
 import React from 'react'
 import Signup from './signup'
-import { RenderResult, render, cleanup } from '@testing-library/react'
+import { RenderResult, render, cleanup, fireEvent, waitFor } from '@testing-library/react'
 import {
   populateField,
   testButtonIsDisabled,
@@ -32,6 +32,17 @@ const makeSut = (params?: SutParams): SutTypes => {
   }
 }
 
+const simulateValidSubmit = async (sut: RenderResult, name = faker.random.word(), email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
+  populateField(sut, 'name', name)
+  populateField(sut, 'email', email)
+  populateField(sut, 'password', password)
+  populateField(sut, 'passwordConfirmation', password)
+
+  const form = sut.getByTestId('form') as HTMLButtonElement
+  fireEvent.submit(form)
+  await waitFor(() => form)
+}
+
 describe('Signup Component', () => {
   afterEach(cleanup)
 
@@ -39,11 +50,6 @@ describe('Signup Component', () => {
     test('Should not render form status', () => {
       const { sut } = makeSut()
       testChildChildCount(sut, 'error-wrap', 0)
-    })
-
-    test('Should render button as disabled', () => {
-      const { sut } = makeSut()
-      testButtonIsDisabled(sut, 'submit')
     })
 
     test('Should render input fields as required', () => {
@@ -111,5 +117,22 @@ describe('Signup Component', () => {
       populateField(sut, 'passwordConfirmation')
       testStatusForField(sut, 'passwordConfirmation')
     })
+  })
+
+  test('Should enable submit button if form is valid', () => {
+    const { sut } = makeSut()
+    populateField(sut, 'name')
+    populateField(sut, 'email')
+    populateField(sut, 'password')
+    populateField(sut, 'passwordConfirmation')
+    testButtonIsDisabled(sut, 'submit', false)
+  })
+
+  test('Should show spinner on submit', async () => {
+    const { sut } = makeSut()
+    await simulateValidSubmit(sut)
+    const spinner = sut.getByTestId('spinner')
+
+    expect(spinner).toBeTruthy()
   })
 })
