@@ -105,8 +105,8 @@ const SignUp: React.FC<Props> = ({ validation, addAccount, saveAccessToken }: Pr
           <h2>Criar conta</h2>
           <Input type="text" name="name" placeholder='Digite seu nome' />
           <Input type="email" name="email" placeholder='Digite seu e-mail' />
-          <Input type="password" name="password" placeholder='Digite sua senhal' />
-          <Input type="password" name="passwordConfirmation" placeholder='Confirme sua senhal' />
+          <Input type="password" name="password" placeholder='Digite sua senha' />
+          <Input type="password" name="passwordConfirmation" placeholder='Confirme sua senha' />
           <SubmitButton text={'Cadastrar'} />
           <Link data-testid="login-link" replace to="/login" className={Styles.link}>Voltar para login</Link>
           <FormStatus />
