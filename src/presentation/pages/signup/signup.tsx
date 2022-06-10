@@ -49,7 +49,7 @@ const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
 
-    if (state.isLoading) return
+    if (state.isLoading || hasError()) return
 
     setState(oldState => ({ ...oldState, isLoading: true }))
     await addAccount.add({

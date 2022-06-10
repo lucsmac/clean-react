@@ -46,7 +46,7 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
     event.preventDefault()
 
     try {
-      if (state.isLoading || errorState.email || errorState.password) return
+      if (state.isLoading || hasError()) return
 
       setState(oldState => ({ ...oldState, isLoading: true }))
       const account = await authentication.auth({
