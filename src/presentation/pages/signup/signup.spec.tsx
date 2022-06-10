@@ -201,4 +201,11 @@ describe('Signup Component', () => {
     testElementText(sut, 'main-error', error.message)
     testChildChildCount(sut, 'error-wrap', 1)
   })
+
+  test('Should redirect to login on success', () => {
+    const { sut } = makeSut()
+    const loginLink = sut.getByTestId('login-link')
+    fireEvent.click(loginLink)
+    expect(window.location.pathname).toBe('/login')
+  })
 })

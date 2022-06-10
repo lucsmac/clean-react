@@ -187,7 +187,7 @@ describe('Login Component', () => {
 
   test('Should redirect to signup on success', () => {
     const { sut } = makeSut()
-    const signup = sut.getByTestId('signup')
+    const signup = sut.getByTestId('signup-link')
     fireEvent.click(signup)
     expect(window.location.pathname).toBe('/signup')
   })
