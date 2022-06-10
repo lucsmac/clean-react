@@ -6,6 +6,7 @@ import Context from '@/presentation/contexts/form/form-context'
 import { Validation } from '@/presentation/protocols/validation'
 import { AddAccount, SaveAccessToken } from '@/domain/usecases'
 import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 type StateProps = {
   isLoading: boolean
@@ -94,7 +95,7 @@ const SignUp: React.FC<Props> = ({ validation, addAccount, saveAccessToken }: Pr
           <Input type="password" name="password" placeholder='Digite sua senhal' />
           <Input type="password" name="passwordConfirmation" placeholder='Confirme sua senhal' />
           <button data-testid="submit" type="submit" disabled={hasError()} className={Styles.submit}>Criar</button>
-          <span className={Styles.link}>Voltar para login</span>
+          <Link data-testid="login-link" replace to="/login" className={Styles.link}>Voltar para login</Link>
           <FormStatus />
         </form>
       </Context.Provider>
