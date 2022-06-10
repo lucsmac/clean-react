@@ -8,13 +8,15 @@ import {
   testElementText,
   testStatusForField
 } from '@/presentation/test/form-helper'
-import { AddAccountSpy, ValidationSpy } from '@/presentation/test'
+import { AddAccountSpy, SaveAccessTokenMock, ValidationSpy } from '@/presentation/test'
 import faker from 'faker'
 import { EmailInUseError } from '@/domain/errors'
+import { BrowserRouter } from 'react-router-dom'
 
 type SutTypes = {
   sut: RenderResult
   addAccountSpy: AddAccountSpy
+  saveAccessTokenMock: SaveAccessTokenMock
 }
 
 type SutParams = {
@@ -25,16 +27,21 @@ const makeSut = (params?: SutParams): SutTypes => {
   const validationSpy = new ValidationSpy()
   validationSpy.errorMessage = params?.validationError
   const addAccountSpy = new AddAccountSpy()
+  const saveAccessTokenMock = new SaveAccessTokenMock()
   const sut = render(
-    <Signup
-      validation={validationSpy}
-      addAccount={addAccountSpy}
-    />
+    <BrowserRouter>
+      <Signup
+        validation={validationSpy}
+        addAccount={addAccountSpy}
+        saveAccessToken={saveAccessTokenMock}
+      />
+    </BrowserRouter>
   )
 
   return {
     sut,
-    addAccountSpy
+    addAccountSpy,
+    saveAccessTokenMock
   }
 }
 
@@ -178,5 +185,11 @@ describe('Signup Component', () => {
     await simulateValidSubmit(sut)
     testElementText(sut, 'main-error', error.message)
     testChildChildCount(sut, 'error-wrap', 1)
+  })
+
+  test('Should call SaveAccessToken on success', async () => {
+    const { sut, addAccountSpy, saveAccessTokenMock } = makeSut()
+    await simulateValidSubmit(sut)
+    expect(saveAccessTokenMock.accessToken).toBe(addAccountSpy.account.accessToken)
   })
 })
