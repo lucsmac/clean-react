@@ -5,10 +5,12 @@ import {
   populateField,
   testButtonIsDisabled,
   testChildChildCount,
+  testElementText,
   testStatusForField
 } from '@/presentation/test/form-helper'
 import { AddAccountSpy, ValidationSpy } from '@/presentation/test'
 import faker from 'faker'
+import { EmailInUseError } from '@/domain/errors'
 
 type SutTypes = {
   sut: RenderResult
@@ -140,7 +142,7 @@ describe('Signup Component', () => {
     expect(spinner).toBeTruthy()
   })
 
-  test('Should call Authentication with correct values', async () => {
+  test('Should call addAccount with correct values', async () => {
     const { sut, addAccountSpy } = makeSut()
     const name = faker.name.findName()
     const email = faker.internet.email()
@@ -155,7 +157,7 @@ describe('Signup Component', () => {
     })
   })
 
-  test('Should call Authentication only once', async () => {
+  test('Should call addAccount only once', async () => {
     const { sut, addAccountSpy } = makeSut()
     await simulateValidSubmit(sut)
     await simulateValidSubmit(sut)
@@ -163,9 +165,18 @@ describe('Signup Component', () => {
     expect(addAccountSpy.callsCount).toBe(1)
   })
 
-  test('Should not call Authentication if form is invalid', async () => {
+  test('Should not call addAccount if form is invalid', async () => {
     const { sut, addAccountSpy } = makeSut({ validationError: faker.random.words() })
     await simulateValidSubmit(sut)
     expect(addAccountSpy.callsCount).toBe(0)
+  })
+
+  test('Should not call addAccount if form is invalid', async () => {
+    const { sut, addAccountSpy } = makeSut()
+    const error = new EmailInUseError()
+    jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(error)
+    await simulateValidSubmit(sut)
+    testElementText(sut, 'main-error', error.message)
+    testChildChildCount(sut, 'error-wrap', 1)
   })
 })

@@ -9,6 +9,7 @@ import {
   populateField,
   testButtonIsDisabled,
   testChildChildCount,
+  testElementText,
   testStatusForField
 } from '@/presentation/test/form-helper'
 
@@ -52,11 +53,6 @@ const simulateValidSubmit = async (sut: RenderResult, email = faker.internet.ema
   const form = sut.getByTestId('form') as HTMLButtonElement
   fireEvent.submit(form)
   await waitFor(() => form)
-}
-
-const testElementText = (sut: RenderResult, fieldName: string, text: string): void => {
-  const element = sut.getByTestId(fieldName)
-  expect(element.textContent).toBe(text)
 }
 
 describe('Login Component', () => {
@@ -168,7 +164,7 @@ describe('Login Component', () => {
   test('Should not call Authentication if form is invalid', async () => {
     const { sut, authenticationSpy } = makeSut()
     const error = new InvalidCredentialsError()
-    jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(Promise.reject(error))
+    jest.spyOn(authenticationSpy, 'auth').mockRejectedValueOnce(error)
     await simulateValidSubmit(sut)
     testElementText(sut, 'main-error', error.message)
     testChildChildCount(sut, 'error-wrap', 1)
