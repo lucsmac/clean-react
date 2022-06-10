@@ -192,4 +192,13 @@ describe('Signup Component', () => {
     await simulateValidSubmit(sut)
     expect(saveAccessTokenMock.accessToken).toBe(addAccountSpy.account.accessToken)
   })
+
+  test('Should present error if SaveAccessToken fails', async () => {
+    const { sut, saveAccessTokenMock } = makeSut()
+    const error = new EmailInUseError()
+    jest.spyOn(saveAccessTokenMock, 'save').mockRejectedValueOnce(error)
+    await simulateValidSubmit(sut)
+    testElementText(sut, 'main-error', error.message)
+    testChildChildCount(sut, 'error-wrap', 1)
+  })
 })
