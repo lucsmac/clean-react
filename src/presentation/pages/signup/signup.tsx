@@ -42,6 +42,14 @@ const SignUp: React.FC<Props> = ({ validation }: Props) => {
     main: ''
   })
 
+  const hasError = (): boolean => !!errorState.name || !!errorState.email || !!errorState.password || !!errorState.passwordConfirmation
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault()
+
+    setState(oldState => ({ ...oldState, isLoading: true }))
+  }
+
   useEffect(() => {
     setErrorState((prevState) => ({
       ...prevState,
@@ -56,13 +64,13 @@ const SignUp: React.FC<Props> = ({ validation }: Props) => {
     <div className={Styles.signup}>
       <Header />
       <Context.Provider value={{ state, setState, errorState, setErrorState }}>
-        <form className={Styles.form}>
+        <form data-testid="form" className={Styles.form} onSubmit={handleSubmit}>
           <h2>Criar conta</h2>
           <Input type="text" name="name" placeholder='Digite seu nome' />
           <Input type="email" name="email" placeholder='Digite seu e-mail' />
           <Input type="password" name="password" placeholder='Digite sua senhal' />
           <Input type="password" name="passwordConfirmation" placeholder='Confirme sua senhal' />
-          <button data-testid="submit" type="submit" disabled className={Styles.submit}>Criar</button>
+          <button data-testid="submit" type="submit" disabled={hasError()} className={Styles.submit}>Criar</button>
           <span className={Styles.link}>Voltar para login</span>
           <FormStatus />
         </form>
