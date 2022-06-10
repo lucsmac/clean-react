@@ -1,5 +1,5 @@
 import React from 'react'
-import Signup from './signup'
+import { Signup } from '@/presentation/pages'
 import { RenderResult, render, cleanup, fireEvent, waitFor } from '@testing-library/react'
 import {
   populateField,
@@ -7,7 +7,7 @@ import {
   testChildChildCount,
   testElementText,
   testStatusForField
-} from '@/presentation/test/form-helper'
+} from '@/presentation/test'
 import { AddAccountSpy, SaveAccessTokenMock, ValidationSpy } from '@/presentation/test'
 import faker from 'faker'
 import { EmailInUseError } from '@/domain/errors'

@@ -11,7 +11,7 @@ import {
   testChildChildCount,
   testElementText,
   testStatusForField
-} from '@/presentation/test/form-helper'
+} from '@/presentation/test'
 
 type SutTypes = {
   sut: RenderResult
