@@ -53,6 +53,7 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
         email: state.email,
         password: state.password
       })
+
       await saveAccessToken.save(account.accessToken)
 
       navigate('/')

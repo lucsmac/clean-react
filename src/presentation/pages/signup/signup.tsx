@@ -4,7 +4,8 @@ import Styles from './styles.scss'
 import { LoginHeader as Header, Footer, Input, FormStatus } from '@/presentation/components'
 import Context from '@/presentation/contexts/form/form-context'
 import { Validation } from '@/presentation/protocols/validation'
-import { AddAccount } from '@/domain/usecases'
+import { AddAccount, SaveAccessToken } from '@/domain/usecases'
+import { useNavigate } from 'react-router-dom'
 
 type StateProps = {
   isLoading: boolean
@@ -25,9 +26,12 @@ type ErrorStateProps = {
 type Props = {
   validation?: Validation
   addAccount?: AddAccount
+  saveAccessToken?: SaveAccessToken
 }
 
-const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
+const SignUp: React.FC<Props> = ({ validation, addAccount, saveAccessToken }: Props) => {
+  const navigate = useNavigate()
+
   const [state, setState] = useState<StateProps>({
     isLoading: false,
     name: '',
@@ -53,12 +57,16 @@ const SignUp: React.FC<Props> = ({ validation, addAccount }: Props) => {
       if (state.isLoading || hasError()) return
 
       setState(oldState => ({ ...oldState, isLoading: true }))
-      await addAccount.add({
+      const account = await addAccount.add({
         name: state.name,
         email: state.email,
         password: state.password,
         passwordConfirmation: state.passwordConfirmation
       })
+
+      await saveAccessToken.save(account.accessToken)
+
+      navigate('/')
     } catch (error) {
       setState(oldState => ({ ...oldState, isLoading: false }))
       setErrorState(oldState => ({ ...oldState, main: error.message }))
