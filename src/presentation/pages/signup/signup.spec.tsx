@@ -47,13 +47,13 @@ describe('Signup Component', () => {
     })
 
     test('Should render input fields as required', () => {
-      const validationError = 'Campo obrigatório'
+      const validationError = faker.random.words()
       const { sut } = makeSut({ validationError })
 
       testStatusForField(sut, 'name', validationError)
       testStatusForField(sut, 'email', validationError)
-      testStatusForField(sut, 'password', 'Campo obrigatório')
-      testStatusForField(sut, 'passwordConfirmation', 'Campo obrigatório')
+      testStatusForField(sut, 'password', validationError)
+      testStatusForField(sut, 'passwordConfirmation', validationError)
     })
   })
 
@@ -77,6 +77,13 @@ describe('Signup Component', () => {
       const { sut } = makeSut({ validationError })
       populateField(sut, 'password')
       testStatusForField(sut, 'password', validationError)
+    })
+
+    test('Should show passwordConfirmation error if Validation fails', () => {
+      const validationError = faker.random.words()
+      const { sut } = makeSut({ validationError })
+      populateField(sut, 'passwordConfirmation')
+      testStatusForField(sut, 'passwordConfirmation', validationError)
     })
   })
 })
