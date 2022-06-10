@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useEffect, useState } from 'react'
 import Styles from './styles.scss'
-import { LoginHeader as Header, Footer, Input, FormStatus } from '@/presentation/components'
+import { LoginHeader as Header, Footer, Input, FormStatus, SubmitButton } from '@/presentation/components'
 import Context from '@/presentation/contexts/form/form-context'
 import { Validation } from '@/presentation/protocols/validation'
 import { Authentication, SaveAccessToken } from '@/domain/usecases'
@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 type StateProps = {
   isLoading: boolean
+  isFormInvalid: boolean
   email: string
   password: string
 }
@@ -30,6 +31,7 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
 
   const [state, setState] = useState<StateProps>({
     isLoading: false,
+    isFormInvalid: true,
     email: '',
     password: ''
   })
@@ -40,13 +42,11 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
     main: ''
   })
 
-  const hasError = (): boolean => !!errorState.email || !!errorState.password
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
 
     try {
-      if (state.isLoading || hasError()) return
+      if (state.isLoading || state.isFormInvalid) return
 
       setState(oldState => ({ ...oldState, isLoading: true }))
       const account = await authentication.auth({
@@ -64,11 +64,20 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
   }
 
   useEffect(() => {
+    const email = validation.validate('email', state.email)
+    const password = validation.validate('password', state.password)
+
     setErrorState((prevState) => ({
       ...prevState,
-      email: validation.validate('email', state.email)
+      email,
+      password
     }))
-  }, [state.email])
+
+    setState((prevState) => ({
+      ...prevState,
+      isFormInvalid: !!email || !!password
+    }))
+  }, [state.email, state.password])
 
   useEffect(() => {
     setErrorState((prevState) => ({
@@ -85,7 +94,7 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
           <h2>Login</h2>
           <Input type="email" name="email" placeholder='Digite seu e-mail' />
           <Input type="password" name="password" placeholder='Digite sua senhal' />
-          <button data-testid="submit" disabled={hasError()} type="submit" className={Styles.submit}>Entrar</button>
+          <SubmitButton text={'Entrar'} />
           <Link data-testid="signup-link" to="/signup" className={Styles.link}>Criar conta</Link>
           <FormStatus />
         </form>

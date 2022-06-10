@@ -37,4 +37,9 @@ button {
   &:hover {
     opacity: .9;
   }
+
+  &:disabled {
+    background-color: $disabled;
+    pointer-events: none;
+  }
 }

@@ -25,13 +25,8 @@
       margin-bottom: 1.5rem;
     }
 
-    .submit {
+    button {
       margin-top: 1.5rem;
-
-      &:disabled {
-        background-color: $disabled;
-        pointer-events: none;
-      }
     }
 
     .link {

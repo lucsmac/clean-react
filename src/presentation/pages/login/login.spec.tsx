@@ -72,26 +72,6 @@ describe('Login Component', () => {
     })
   })
 
-  describe('Should call Validation with correct values', () => {
-    test('With correct email', () => {
-      const { sut, validationSpy } = makeSut()
-      const email = faker.internet.email()
-      populateField(sut, 'email', email)
-
-      expect(validationSpy.fieldName).toBe('email')
-      expect(validationSpy.fieldValue).toBe(email)
-    })
-
-    test('With correct password', () => {
-      const { sut, validationSpy } = makeSut()
-      const password = faker.internet.password()
-      populateField(sut, 'password', password)
-
-      expect(validationSpy.fieldName).toBe('password')
-      expect(validationSpy.fieldValue).toBe(password)
-    })
-  })
-
   describe('Should show error state if Validation fails', () => {
     test('email error', () => {
       const { sut, validationSpy } = makeSut({ validationError: faker.random.words() })
