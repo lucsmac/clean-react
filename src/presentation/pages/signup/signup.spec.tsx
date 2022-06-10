@@ -86,4 +86,30 @@ describe('Signup Component', () => {
       testStatusForField(sut, 'passwordConfirmation', validationError)
     })
   })
+
+  describe('Should show valid state if Validation succeeds', () => {
+    test('name succeeds', () => {
+      const { sut } = makeSut()
+      populateField(sut, 'name')
+      testStatusForField(sut, 'name')
+    })
+
+    test('email succeeds', () => {
+      const { sut } = makeSut()
+      populateField(sut, 'email')
+      testStatusForField(sut, 'email')
+    })
+
+    test('password succeeds', () => {
+      const { sut } = makeSut()
+      populateField(sut, 'password')
+      testStatusForField(sut, 'password')
+    })
+
+    test('passwordConfirmation succeeds', () => {
+      const { sut } = makeSut()
+      populateField(sut, 'passwordConfirmation')
+      testStatusForField(sut, 'passwordConfirmation')
+    })
+  })
 })
