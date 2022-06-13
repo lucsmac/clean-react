@@ -5,8 +5,7 @@ export default defineConfig({
     setupNodeEvents(on, config) { },
     baseUrl: "http://localhost:8080",
     fixturesFolder: false,
-    supportFile: false,
-    fileServerFolder: '<rootDir>/src/main/test',
+    supportFile: 'src/main/test/cypress/support/e2e.ts',
     specPattern: 'src/main/test/cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
   },
 
