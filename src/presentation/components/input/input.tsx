@@ -8,13 +8,7 @@ export const Input: React.FC<Props> = (props: Props) => {
   const { errorState, setState } = useContext(Context)
   const error = errorState[props.name]
 
-  const getStatus = (): string => {
-    return error ? '🔴' : '✔'
-  }
-
-  const getTtitle = (): string => {
-    return error
-  }
+  const getStatus = (): string => error ? '🔴' : '✔'
 
   const enableInput = (event: React.FocusEvent<HTMLInputElement>): void => {
     event.target.readOnly = false
@@ -29,8 +23,25 @@ export const Input: React.FC<Props> = (props: Props) => {
 
   return (
     <div className={Styles.inputWrap}>
-      <input data-testid={props.name} {...props} readOnly onFocus={enableInput} onChange={handleChange} />
-      <span data-testid={`${props.name}-status`} title={getTtitle()} className={Styles.inputStatus}>{getStatus()}</span>
+      <input
+        {...props}
+        placeholder=" "
+        data-testid={props.name}
+        readOnly
+        onFocus={enableInput}
+        onChange={handleChange}
+        id={`input-${props.name}`}
+      />
+      <label htmlFor={`input-${props.name}`}>
+        {props.placeholder}
+      </label>
+      <span
+        data-testid={`${props.name}-status`}
+        title={error}
+        className={Styles.inputStatus}
+      >
+        {getStatus()}
+      </span>
     </div>
   )
 }
