@@ -22,26 +22,28 @@ export const Input: React.FC<Props> = (props: Props) => {
   }
 
   return (
-    <div className={Styles.inputWrap}>
+    <div
+      className={Styles.inputWrap}
+      data-testid={`${props.name}-wrap`}
+      data-status={error ? 'invalid' : 'valid'}
+    >
       <input
         {...props}
         placeholder=" "
+        title={error}
         data-testid={props.name}
         readOnly
         onFocus={enableInput}
         onChange={handleChange}
         id={`input-${props.name}`}
       />
-      <label htmlFor={`input-${props.name}`}>
+      <label
+        data-testid={`${props.name}-label`}
+        title={error}
+        htmlFor={`input-${props.name}`}
+      >
         {props.placeholder}
       </label>
-      <span
-        data-testid={`${props.name}-status`}
-        title={error}
-        className={Styles.inputStatus}
-      >
-        {getStatus()}
-      </span>
     </div>
   )
 }
