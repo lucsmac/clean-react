@@ -51,6 +51,12 @@ describe('Login', () => {
   })
 
   it('should present error if invalid credentials are provided', () => {
+    // cy.intercept('POST', /login/, {
+    //   status: 401,
+    //   response: {
+    //     error: faker.random.words()
+    //   }
+    // })
     cy.getByTestId('email').focus().type(faker.internet.email())
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
     cy.getByTestId('submit').click()
