@@ -1,5 +1,7 @@
-import { testInputStatus } from '../support/form-helper'
 import faker from 'faker'
+import { testInputStatus } from '../support/form-helper'
+
+const baseUrl: string = Cypress.config().baseUrl
 
 describe('SignUp', () => {
   beforeEach(() => {
@@ -49,5 +51,23 @@ describe('SignUp', () => {
 
     cy.getByTestId('submit').should('not.have.attr', 'disabled')
     cy.getByTestId('error-wrap').should('not.have.descendants')
+  })
+
+  it('should present error if invalid credentials are provided', () => {
+    cy.getByTestId('name').focus().type(faker.name.findName())
+    cy.getByTestId('email').focus().type('mango@gmail.com')
+    const password = faker.random.alphaNumeric(5)
+    cy.getByTestId('password').focus().type(password)
+    cy.getByTestId('passwordConfirmation').focus().type(password)
+
+    cy.getByTestId('submit').click()
+
+    cy.getByTestId('error-wrap')
+      .getByTestId('spinner').should('exist')
+      .getByTestId('main-error').should('not.exist')
+      .getByTestId('spinner').should('not.exist')
+      .getByTestId('main-error').should('contain.text', 'Algo de errado aconteceu. Tente novamente.')
+
+    cy.url().should('eq', `${baseUrl}/signup`)
   })
 })
