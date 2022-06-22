@@ -8,8 +8,6 @@ export const Input: React.FC<Props> = (props: Props) => {
   const { errorState, setState } = useContext(Context)
   const error = errorState[props.name]
 
-  const getStatus = (): string => error ? '🔴' : '✔'
-
   const enableInput = (event: React.FocusEvent<HTMLInputElement>): void => {
     event.target.readOnly = false
   }
