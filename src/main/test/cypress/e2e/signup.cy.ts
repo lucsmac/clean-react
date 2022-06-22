@@ -3,6 +3,14 @@ import { testInputStatus } from '../support/form-helper'
 
 const baseUrl: string = Cypress.config().baseUrl
 
+const simulateValidSubmit = (email?: string) => {
+  cy.getByTestId('name').focus().type(faker.name.findName())
+  cy.getByTestId('email').focus().type(email || faker.internet.email())
+  const password = faker.random.alphaNumeric(5)
+  cy.getByTestId('password').focus().type(password)
+  cy.getByTestId('passwordConfirmation').focus().type(password)
+}
+
 describe('SignUp', () => {
   beforeEach(() => {
     cy.visit('signup')
@@ -42,7 +50,6 @@ describe('SignUp', () => {
     testInputStatus('name')
     cy.getByTestId('email').focus().type(faker.internet.email())
     testInputStatus('email')
-
     const password = faker.random.alphaNumeric(5)
     cy.getByTestId('password').focus().type(password)
     testInputStatus('password')
@@ -54,12 +61,7 @@ describe('SignUp', () => {
   })
 
   it('should present error if invalid credentials are provided', () => {
-    cy.getByTestId('name').focus().type(faker.name.findName())
-    cy.getByTestId('email').focus().type('mango@gmail.com')
-    const password = faker.random.alphaNumeric(5)
-    cy.getByTestId('password').focus().type(password)
-    cy.getByTestId('passwordConfirmation').focus().type(password)
-
+    simulateValidSubmit('mango@gmail.com')
     cy.getByTestId('submit').click()
 
     cy.getByTestId('error-wrap')
@@ -67,7 +69,17 @@ describe('SignUp', () => {
       .getByTestId('main-error').should('not.exist')
       .getByTestId('spinner').should('not.exist')
       .getByTestId('main-error').should('contain.text', 'Algo de errado aconteceu. Tente novamente.')
-
     cy.url().should('eq', `${baseUrl}/signup`)
+  })
+
+  it('should save accessToken if valid credentials are provided', () => {
+    simulateValidSubmit()
+    cy.getByTestId('submit').click()
+
+    cy.getByTestId('error-wrap')
+      .getByTestId('main-error').should('not.exist')
+      .getByTestId('spinner').should('not.exist')
+    cy.url().should('eq', `${baseUrl}/`)
+    cy.window().then(window => assert.isOk(window.localStorage.getItem('accessToken')))
   })
 })
