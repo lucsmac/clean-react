@@ -29,5 +29,10 @@
     "@typescript-eslint/no-explicit-any": "off",
     "react/prop-types": "off",
     "@typescript-eslint/no-empty-function": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
