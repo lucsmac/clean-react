@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --open",
+    "build": "webpack",
+    "start": "webpack serve",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "lint": "eslint ./src",
     "test:watch": "npm test -- --watch",

@@ -1,6 +1,5 @@
 const path = require('path')
 const { DefinePlugin } = require('webpack')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
   mode: 'development',
@@ -8,7 +7,8 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'public/js'),
     publicPath: '/public/js',
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    clean: true
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', 'scss'],
@@ -41,9 +41,6 @@ module.exports = {
     static: {
       directory: './public'
     },
-    devMiddleware: {
-      writeToDisk: true
-    },
     historyApiFallback: true
   },
   externals: {
@@ -51,7 +48,6 @@ module.exports = {
     'react-dom': 'ReactDOM'
   },
   plugins: [
-    new CleanWebpackPlugin(),
     new DefinePlugin({
       'process.env.API_URL': JSON.stringify('http://fordevs.herokuapp.com/api')
     })
