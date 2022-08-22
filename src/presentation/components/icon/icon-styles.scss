@@ -1,0 +1,18 @@
+@import "./../../styles/colors.scss";
+
+.iconWrap {
+  padding: 10px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 1px 6px -1px $dark;
+
+  &.red {
+    background-color: $invalid;
+  }
+
+  &.green {
+    background-color: $valid;
+  }
+}
