@@ -41,6 +41,9 @@ module.exports = {
     static: {
       directory: './public'
     },
+    devMiddleware: {
+      writeToDisk: true
+    },
     historyApiFallback: true
   },
   externals: {
