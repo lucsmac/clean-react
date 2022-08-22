@@ -7,7 +7,7 @@
     "build": "webpack",
     "dev": "webpack serve",
     "test": "jest --passWithNoTests --no-cache --runInBand",
-    "lint": "eslint ./src/**/*.tsx",
+    "lint": "eslint ./src/**",
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage",
