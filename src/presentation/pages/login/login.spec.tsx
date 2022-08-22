@@ -1,8 +1,9 @@
 import React from 'react'
 import { cleanup, fireEvent, render, RenderResult, waitFor } from '@testing-library/react'
 import faker from 'faker'
+import { ApiContext } from '@/presentation/contexts'
 import { Login } from '@/presentation/pages'
-import { ValidationSpy, AuthenticationSpy, UpdateCurrentAccountMock } from '@/presentation/test'
+import { ValidationSpy, AuthenticationSpy } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
 import { BrowserRouter } from 'react-router-dom'
 import {
@@ -12,12 +13,13 @@ import {
   testElementText,
   testStatusForField
 } from '@/presentation/test'
+import { AccountModel } from '@/domain/models'
 
 type SutTypes = {
   sut: RenderResult
   validationSpy: ValidationSpy
   authenticationSpy: AuthenticationSpy
-  updateCurrentAccountMock: UpdateCurrentAccountMock
+  setCurrentAccountMock: (account: AccountModel) => void
 }
 
 type SutParams = {
@@ -28,21 +30,22 @@ const makeSut = (params?: SutParams): SutTypes => {
   const validationSpy = new ValidationSpy()
   validationSpy.errorMessage = params?.validationError
   const authenticationSpy = new AuthenticationSpy()
-  const updateCurrentAccountMock = new UpdateCurrentAccountMock()
+  const setCurrentAccountMock = jest.fn()
   const sut = render(
-    <BrowserRouter>
-      <Login
-        validation={validationSpy}
-        authentication={authenticationSpy}
-        updateCurrentAccount={updateCurrentAccountMock}
-      />
-    </BrowserRouter>
+    <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock }}>
+      <BrowserRouter>
+        <Login
+          validation={validationSpy}
+          authentication={authenticationSpy}
+        />
+      </BrowserRouter>
+    </ApiContext.Provider>
   )
   return {
     sut,
     validationSpy,
     authenticationSpy,
-    updateCurrentAccountMock
+    setCurrentAccountMock
   }
 }
 
@@ -150,19 +153,10 @@ describe('Login Component', () => {
     testChildChildCount(sut, 'error-wrap', 1)
   })
 
-  test('Should call SaveAccessToken on success', async () => {
-    const { sut, authenticationSpy, updateCurrentAccountMock } = makeSut()
+  test('Should call SetCurrentAccount on success', async () => {
+    const { sut, authenticationSpy, setCurrentAccountMock } = makeSut()
     await simulateValidSubmit(sut)
-    expect(updateCurrentAccountMock.account).toEqual(authenticationSpy.account)
-  })
-
-  test('Should present error if SaveAccessToken fails', async () => {
-    const { sut, updateCurrentAccountMock } = makeSut()
-    const error = new InvalidCredentialsError()
-    jest.spyOn(updateCurrentAccountMock, 'save').mockRejectedValueOnce(error)
-    await simulateValidSubmit(sut)
-    testElementText(sut, 'main-error', error.message)
-    testChildChildCount(sut, 'error-wrap', 1)
+    expect(setCurrentAccountMock).toHaveBeenCalledWith(authenticationSpy.account)
   })
 
   test('Should redirect to signup on success', () => {
