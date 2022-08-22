@@ -1,4 +1,4 @@
-import { fireEvent, RenderResult } from '@testing-library/react'
+import { fireEvent, RenderResult, screen } from '@testing-library/react'
 import faker from 'faker'
 
 export const testChildChildCount = (sut: RenderResult, fieldName: string, count: number): void => {
@@ -26,6 +26,5 @@ export const populateField = (sut: RenderResult, fieldName: string, value = fake
 }
 
 export const testElementText = (sut: RenderResult, fieldName: string, text: string): void => {
-  const element = sut.getByTestId(fieldName)
-  expect(element.textContent).toBe(text)
+  expect(screen.getByTestId(fieldName)).toHaveTextContent(text)
 }
