@@ -29,7 +29,7 @@ describe('Login', () => {
   })
 
   it('should present valid state if form is valid', () => {
-    cy.getByTestId('email') .focus().type(faker.internet.email())
+    cy.getByTestId('email').focus().type(faker.internet.email())
     testInputStatus('email')
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
     testInputStatus('password')
@@ -58,6 +58,6 @@ describe('Login', () => {
       .getByTestId('main-error').should('not.exist')
       .getByTestId('spinner').should('not.exist')
     cy.url().should('eq', `${baseUrl}/`)
-    cy.window().then(window => assert.isOk(window.localStorage.getItem('accessToken')))
+    cy.window().then(window => assert.isOk(window.localStorage.getItem('account')))
   })
 });
