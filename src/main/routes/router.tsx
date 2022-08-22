@@ -1,19 +1,16 @@
 import { SurveyList } from '@/presentation/pages'
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { MakeLogin } from '../factories/pages/login/login-factory'
+import { MakeSignUp } from '../factories/pages/signup/signup-factory'
 
-type Props = {
-  MakeLogin: React.FC
-  MakeSignup: React.FC
-}
-
-export const Router: React.FC<Props> = ({ MakeLogin, MakeSignup }: Props) => {
+export const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<SurveyList />} />
         <Route path="/login" element={<MakeLogin />} />
-        <Route path="/signup" element={<MakeSignup />} />
+        <Route path="/signup" element={<MakeSignUp />} />
       </Routes>
     </BrowserRouter>
   )
