@@ -29,121 +29,7 @@
       flex-direction: grow;
       flex-wrap: wrap;
       justify-content: space-between;
-
-      li {
-        height: 250px;
-        background-color: $white;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        border-radius: 8px;
-        flex-basis: 48%;
-        margin-bottom: 24px;
-        box-shadow: 0px 1px 6px -1px rgba($dark, .5);
-
-        &:empty {
-          position: relative;
-          overflow: hidden;
-          background-repeat: no-repeat;
-          background-image:
-            linear-gradient(to right, $disabledBackground, $disabledBackground),
-            linear-gradient(to right, $disabledBackground, $disabledBackground),
-            linear-gradient(to right, $disabledBackground, $disabledBackground),
-            linear-gradient(to right, $disabledBackground, $disabledBackground),
-            linear-gradient(to right, $disabledBackground, $disabledBackground);
-          background-position:
-            24px 55px,
-            left 0 bottom 0,
-            108px 77px,
-            108px 97px,
-            108px 117px;
-          background-size:
-            60px 100px,
-            100% 40px,
-            140px 16px,
-            130px 16px,
-            160px 16px;
-
-          &::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            transform: translateX(-100%);
-            background-image: linear-gradient(to right, transparent, rgba($white, 0.2), transparent);
-            animation: shimmer 1s infinite;
-          }
-        }
-
-        .surveyContent {
-          display: flex;
-          flex-direction: row;
-          border-radius: 8px 8px 0 0;
-          justify-content: space-between;
-          flex-grow: 1;
-          position: relative;
-
-          .iconWrap {
-            position: absolute;
-            top: -16px;
-            right: -16px;
-          }
-
-          time {
-            display: flex;
-            flex-direction: column;
-            background-color: $primaryLight;
-            color: $white;
-            border-radius: 8px;
-            margin-left: 24px;
-            align-items: center;
-            align-self: center;
-            justify-content: center;
-            width: 60px;
-            height: 100px;
-            flex-shrink: 0;
-
-            .day {
-              font-size: 32px;
-              font-weight: bold;
-            }
-
-            .month {
-              text-transform: lowercasea;
-              margin: 0px 0px 5px;
-            }
-
-            .year {
-              font-size: 1.25rem;
-            }
-          }
-
-          p {
-            font-size: 18px;
-            margin: 24px;
-            align-self: center;
-            flex-grow: 1;
-          }
-        }
-
-        footer {
-          background-color: $primary;
-          color: $white;
-          line-height: 40px;
-          text-transform: lowercase;
-          text-align: center;
-          cursor: pointer;
-          border-radius: 0 0 8px 8px;
-
-          &:hover {
-            background-color: $primaryDark;
-          }
-        }
-      }
     }
-
   }
 }
 
@@ -151,16 +37,6 @@
   .surveyListWrap {
     ul {
       flex-direction: column;
-
-      li {
-        flex-basis: 100%;
-      }
     }
-  }
-}
-
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
   }
 }
