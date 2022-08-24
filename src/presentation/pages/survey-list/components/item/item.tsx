@@ -1,18 +1,18 @@
 import { SurveyModel } from '@/domain/models'
 import { Icon, IconName } from '@/presentation/components'
 import React from 'react'
-import Styles from './survey-item.scss'
+import Styles from './item.scss'
 
 type Props = {
   survey: SurveyModel
 }
 
-const SurveyItem: React.FC<Props> = ({ survey }: Props) => {
+const Item: React.FC<Props> = ({ survey }: Props) => {
   const iconName = survey.didAnswer ? IconName.thumbUp : IconName.thumbDown
 
   return (
-    <li className={Styles.surveyItemWrap}>
-      <div className={Styles.surveyContent}>
+    <li className={Styles.itemWrap}>
+      <div className={Styles.content}>
         <Icon iconName={iconName} className={Styles.iconWrap} />
         <time>
           <span data-testid="day" className={Styles.day}>
@@ -32,4 +32,4 @@ const SurveyItem: React.FC<Props> = ({ survey }: Props) => {
   )
 }
 
-export default SurveyItem
+export default Item

@@ -1,6 +1,6 @@
 @import "../../../../styles/colors.scss";
 
-.surveyItemEmpty {
+.itemEmpty {
   height: 250px;
   background-color: $white;
   display: flex;
@@ -46,7 +46,7 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .surveyItemWrap {
+  .itemWrap {
     flex-basis: 100%;
   }
 }

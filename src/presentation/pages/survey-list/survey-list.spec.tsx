@@ -43,11 +43,11 @@ describe('SurveyList Component', () => {
     await waitFor(() => screen.getByRole('heading'))
   })
 
-  test('Should render SurveyItems on success', async () => {
+  test('Should render Items on success', async () => {
     const { loadSurveyListSpy } = makeSut()
     const surveyList = screen.getByTestId('survey-list')
     await waitFor(() => surveyList)
-    expect(surveyList.querySelectorAll('li.surveyItemWrap')).toHaveLength(loadSurveyListSpy.surveys.length)
+    expect(surveyList.querySelectorAll('li.itemWrap')).toHaveLength(loadSurveyListSpy.surveys.length)
     expect(screen.queryByTestId('error')).not.toBeInTheDocument()
   })
 
